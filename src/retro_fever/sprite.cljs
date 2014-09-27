@@ -17,11 +17,13 @@
 
 (defn ^:export render [context sprite]
   (let [{:keys [image width height x y]} sprite]
-    (.drawImage context image (+ x (/ width 2))
-                (+ y (/ height 2)) width height)))
+    (.save context)
+    (.translate context x y)
+    (.drawImage context image (* (/ width 2) -1) (* (/ height 2) -1) width height)
+    (.restore context)))
 
 (defn ^:export draw-image
-  "Draw given image at specified location"
+  "Draw given image with top left at specified location"
   [context image x y]
   (.drawImage context image x y (aget image "width") (aget image "height")))
 

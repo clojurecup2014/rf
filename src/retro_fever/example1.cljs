@@ -22,7 +22,7 @@
   (swap! game-state assoc-in [:images :background] (sprite/load-image "images/background.png"))
   (swap! game-state assoc-in [:images :dummy] (sprite/load-image "images/dummy_walk.png"))
   (swap! game-state assoc-in [:character] (sprite/sprite (get-in @game-state [:images :dummy])
-                                                         50 80 100 350))
+                                                         50 80 320 420))
 
   ; Setup game loop
   (game core/game-loop update-fn render-fn)
