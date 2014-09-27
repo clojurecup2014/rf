@@ -1,4 +1,4 @@
-(ns retro-fever.example1
+(ns rf-basic-game.core
   (:require-macros [retro-fever.macros :refer [game]])
   (:require [retro-fever.core :as core]
             [retro-fever.input :as input]
@@ -14,7 +14,7 @@
   (sprite/render context (get-in @game-state [:character])))
 
 (defn ^:export init []
-  (.log js/console "Launching Example 1")
+  (.log js/console "Launching a basic game")
   (core/init-canvas "game-canvas" 640 480)
   (input/init)
 
