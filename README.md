@@ -4,10 +4,10 @@ A 2D game engine targeting modern browsers and mobile devices
 
 # Usage
 
-Start by compiling the ClojureScript into Javascript:
+To install Retro Fever game engine (lib) on you machine run:
 
-    lein cljsbuild auto
+    lein install
 
-Then open the html file in a browser like newest Chrome or Firefox:
-
-    resources/index.html
+Now it is possible to build the demos in the `demo` directory.
+Follow the instructions in the `README.md` files within each of the
+demo sub directories you want to test out.
