@@ -3,9 +3,9 @@
 (def sprite-state (atom {}))
 
 
-(defn  ^:export init-sprite
-  ""
-  [src width height x y]
+(defn  ^:export load-image
+  "Load image from source"
+  [src]
   (let [image (js/Image.)]
     (set! (.-src image) src)
     image))
