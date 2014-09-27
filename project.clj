@@ -3,7 +3,8 @@
   :url "http://rf.clojurecup.com"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2356"]
-                 [enfocus "2.1.0"]]
+                 [enfocus "2.1.0"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
   :plugins [[lein-cljsbuild "1.0.3"]]
   :cljsbuild {
     :builds [{
