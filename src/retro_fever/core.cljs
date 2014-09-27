@@ -24,7 +24,7 @@
         tick))))
 
 (defn game-loop
-  [tick-interval update-fn draw-fn]
+  [tick-interval update-fn render-fn]
   (let [quit-chan (chan)
         update (update-loop tick-interval update-fn)]
     (go (loop [next-tick (util/current-time-ms)]
@@ -32,7 +32,7 @@
             (when-not (= ch quit-chan)
               (stats/record-start)
               (let [tick (update next-tick)]
-                (draw-fn)
+                (render-fn (get-in @app [:game :canvas :context]))
                 (stats/record-render)
                 (stats/calculate)
                 (recur tick))))))
