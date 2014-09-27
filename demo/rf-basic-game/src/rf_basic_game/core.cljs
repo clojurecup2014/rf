@@ -7,7 +7,27 @@
 (def game-state (atom {}))
 
 (defn update-fn []
-  nil)
+
+  (when (>= (get-in @game-state [:character :y]) 420)
+    (swap! game-state update-in [:character] assoc :jumping false :velocity-y 0 ))
+
+  (when (>= (get-in @game-state [:character :x]) -100)
+    (swap! game-state update-in [:character] assoc :walking false :velocity-x 0 ))
+
+  (when (and (or (input/key-pressed? :spacebar) (input/key-pressed? :up))
+             (not (true? (get-in @game-state [:character :jumping]))))
+    (swap! game-state update-in [:character] assoc :velocity-y -10  :jumping true))
+
+  (when (and (input/key-pressed? :left)
+             (not (true? (get-in @game-state [:character :walking]))))
+    (swap! game-state update-in [:character] assoc :velocity-x -10 :walking true))
+
+
+  (when (and (input/key-pressed? :right)
+             (not (true? (get-in @game-state [:character :walking]))))
+    (swap! game-state update-in [:character] assoc :velocity-x 10 :walking true))
+
+  (swap! game-state update-in [:character] sprite/update))
 
 (defn render-fn [context]
   (sprite/draw-image context (get-in @game-state [:images :background]) 0 0)

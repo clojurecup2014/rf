@@ -38,3 +38,11 @@
         diff-y (- (:y s1) (:y s2))]
     (Math/sqrt (+ (* diff-x diff-x)
                   (* diff-y diff-y)))))
+
+(defn ^:export update [sprite]
+  (let [{:keys [x y velocity-x velocity-y acceleration]} sprite
+        new-vy (+ velocity-y 0.3)
+        new-vx (+ velocity-x 0.3)
+        new-x (+ x velocity-x)
+        new-y (+ y velocity-y)]
+    (assoc sprite :x new-x :y new-y :velocity-y new-vy :velocity-x new-vx)))
