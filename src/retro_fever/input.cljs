@@ -14,6 +14,10 @@
   (let [key-code (keyword (str (aget e "keyCode")))]
     (swap! kbd-state dissoc key-code)))
 
+(defn is-key-pressed
+  [key-code]
+  (true? (get @kbd-state key-code)))
+
 (defn ^:export init
   []
   (aset js/window "onkeydown" on-key-down)
