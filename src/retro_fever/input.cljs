@@ -1,7 +1,7 @@
 (ns retro-fever.input
   (:require [clojure.string :as string]))
 
-(def kbd-state (atom {}))
+(def kbd-state (atom #{}))
 
 (def special-key-codes
   {8  "Backspace"
@@ -59,9 +59,9 @@
 
 (defn key-pressed?
   [key-code]
-  (true? (get @kbd-state key-code)))
+  (contains? @kbd-state key-code))
 
 (defn ^:export init
   []
-  (aset js/window "onkeydown" (kbd-state-change kbd-state #(assoc %1 %2 true)))
-  (aset js/window "onkeyup" (kbd-state-change kbd-state #(dissoc %1 %2))))
+  (aset js/window "onkeydown" (kbd-state-change kbd-state conj))
+  (aset js/window "onkeyup" (kbd-state-change kbd-state disj)))
