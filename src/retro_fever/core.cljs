@@ -32,8 +32,10 @@
           (let [[v ch] (alts! [quit-chan (timeout (- next-tick (util/current-time-ms)))])]
             (when-not (= ch quit-chan)
               (stats/record-start)
-              (let [tick (update next-tick)]
-                (render-fn (get-in @app [:game :canvas :context]))
+              (let [tick (update next-tick)
+                    {:keys [context width height]} (get-in @app [:game :canvas])]
+                (.clearRect context 0 0 width height)
+                (render-fn context)
                 (stats/record-render)
                 (stats/calculate)
                 (recur tick))))))
