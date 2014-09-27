@@ -1,11 +1,13 @@
 (ns retro-fever.sprite)
 
+(def sprite-state (atom {:image ""
+                         :canvas ""}))
+
+
 (defn  ^:export init-image
   ""
-  [src width]
+  [src]
   (let [image (js/Image.)]
-    (set! (.-onload image) (fn []
-                             (set! (.-width image) width)))
     (set! (.-src image) src)
     image))
 
@@ -16,11 +18,18 @@
     (.getContext canvas "2d")))
 
 (defn ^:export render [canvas image]
-  (set! (.-onload image) (fn []
-                           (do (.log js/console canvas)
-                               (set! (.-fillStyle canvas) "black")
-                               (.drawImage canvas image 0 0 100 100 0 0 100 100)))))
+  (let [width (.-width image)]
+    (.log js/console width)
+    (.log js/console canvas)
+    (set! (.-fillStyle canvas) "black")
+    (.drawImage canvas image 0 0 100 100 0 0 10 10)))
 
+(defn game-loop []
+  (render (:canvas @sprite-state) (:image @sprite-state)))
 
 (defn  ^:export init []
-  (render (init-canvas "coinAnimation" 100 100) (init-image "images/coin-sprite-animation.png")))
+  (let [image (init-image "images/coin-sprite-animation.png" 10)
+        canvas (init-canvas "coinAnimation" 100 100)]
+    (swap! sprite-state update-in [:image] (fn [] image))
+    (swap! sprite-state update-in [:canvas]  (fn [] canvas))
+    (.addEventListener image "load" game-loop)))
