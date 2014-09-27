@@ -6,5 +6,6 @@ pom.xml.asc
 *.jar
 *.class
 /.lein-*
+/demo/*/target
 /.nrepl-port
 /resources/retro-fever.js
