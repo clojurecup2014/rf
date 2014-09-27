@@ -1,40 +1,40 @@
 (ns retro-fever.sprite)
 
-(def sprite-state (atom {}))
-
-
-(defn  ^:export init-sprite
-  ""
-  [src width height x y]
+(defn  ^:export load-image
+  "Load image from source"
+  [src]
   (let [image (js/Image.)]
     (set! (.-src image) src)
-    {:image image
-     :width width
-     :height height
-     :x x
-     :y y}))
+    image))
 
-(defn init-canvas [id width height]
-  (let [canvas (.getElementById js/document (name id))]
-    (set! (.-width canvas) width)
-    (set! (.-height canvas) height)
-    {:canvas-2d (.getContext canvas "2d")
-     :canvas-width width
-     :canvas-height height}))
+(defn ^:export sprite
+  [image width height x y]
+  {:image image
+   :width width
+   :height height
+   :x x
+   :y y})
 
-(defn ^:export render [canvas sprite]
-  (let  [{:keys [image width height x y]} sprite
-         {:keys [canvas-2d canvas-width canvas-height]} canvas]
-    (.log js/console canvas)
-    (.log js/console canvas-width)
-    (.drawImage canvas-2d image 0 0 canvas-width canvas-height x y width height)))
+(defn ^:export render [context sprite]
+  (let [{:keys [image width height x y]} sprite]
+    (.save context)
+    (.translate context x y)
+    (.drawImage context image (* (/ width 2) -1) (* (/ height 2) -1) width height)
+    (.restore context)))
 
-(defn game-loop []
-  (render (:canvas @sprite-state) (:sprite @sprite-state)))
+(defn ^:export draw-image
+  "Draw given image with top left at specified location"
+  [context image x y]
+  (.drawImage context image x y (aget image "width") (aget image "height")))
 
-(defn  ^:export init []
-  (let [sprite (init-sprite "images/coin-sprite-animation.png" 10 10 0 0)
-        canvas (init-canvas "coinAnimation" 100 100)]
-    (swap! sprite-state update-in [:sprite] (fn [] sprite))
-    (swap! sprite-state update-in [:canvas]  (fn [] canvas))
-    (.addEventListener (:image sprite) "load" game-loop)))
+(defn collides?
+  [s1 s2]
+  (and (< (* (Math/abs (- (:x s1) (:x s2))) 2) (+ (:width s1) (:width s2)))
+       (< (* (Math/abs (- (:y s1) (:y s2))) 2) (+ (:height s1) (:height s2)))))
+
+(defn distance-to
+  [s1 s2]
+  (let [diff-x (- (:x s1) (:x s2))
+        diff-y (- (:y s1) (:y s2))]
+    (Math/sqrt (+ (* diff-x diff-x)
+                  (* diff-y diff-y)))))
