@@ -1,10 +1,7 @@
 (ns retro-fever.core
   (:require-macros [cljs.core.async.macros :refer [go]]
                    [retro-fever.macros :refer [game]])
-  (:require [retro-fever.input :as input]
-            [enfocus.core :as ef]
-            [enfocus.bind :as bind]
-            [cljs.core.async :refer [<! put! alts! chan timeout]]
+  (:require [cljs.core.async :refer [<! put! alts! chan timeout]]
             [retro-fever.util :as util]
             [retro-fever.stats :as stats]))
 
@@ -18,7 +15,7 @@
                                          :width width
                                          :height height})))
 
-(defn update-loop [tick-interval update-fn]
+(defn- update-loop [tick-interval update-fn]
   (fn [next-tick]
     (loop [tick next-tick skips 0]
       (if (and (< tick (util/current-time-ms)) (< skips 5))
@@ -44,11 +41,3 @@
 
 (defn stop-loop []
   (put! (get-in @app [:game :loop]) false))
-
-(defn ^:export init
-  []
-  (.log js/console "We have a take off!")
-  (ef/at "#input" (bind/bind-view input/kbd-state render-kbd))
-
-  (input/init)
-)
