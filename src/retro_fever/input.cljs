@@ -57,7 +57,7 @@
                 keyword)]
       (apply swap! [state f k]))))
 
-(defn is-key-pressed
+(defn key-pressed?
   [key-code]
   (true? (get @kbd-state key-code)))
 
