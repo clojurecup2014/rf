@@ -2,11 +2,12 @@
 
 (defn  ^:export init-image
 ""
-[src]
-(let [img (js/Image.)]
-  (set! (.-onload img) (fn [] (.log js/console "Image loaded")))
-  (set! (.-src img) src)
-  img))
+[src width]
+(let [image (js/Image.)]
+  (set! (.-onload image) (fn []
+                           (set! (.-width image) width)))
+  (set! (.-src image) src)
+  image))
 
 (defn init-canvas [id width height]
   (let [canvas (.getElementById js/document (name id))]
@@ -15,8 +16,10 @@
     (.getContext canvas "2d")))
 
  (defn ^:export render [canvas image]
-   (do (.log js/console canvas)
-       (.drawImage canvas image 0 0 100 100 0 0 100 100)))
+   (set! (.-onload image) (fn []
+                          (do (.log js/console canvas)
+                              (set! (.-fillStyle canvas) "black")
+                              (.drawImage canvas image 0 0 100 100 0 0 100 100)))))
 
 
 (defn  ^:export init []
