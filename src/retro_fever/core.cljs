@@ -8,11 +8,15 @@
             [retro-fever.util :as util]
             [retro-fever.stats :as stats]))
 
-(defn render-kbd
-  [node kbd-state]
-  (ef/at node (ef/content (prn-str kbd-state))))
+(def app (atom {:game {:canvas nil :loop nil}}))
 
-(def app (atom {:game {:loop nil}}))
+(defn init-canvas [id width height]
+  (let [canvas (.getElementById js/document (name id))]
+    (set! (.-width canvas) width)
+    (set! (.-height canvas) height)
+    (swap! app assoc-in [:game :canvas] {:context (.getContext canvas "2d")
+                                         :width width
+                                         :height height})))
 
 (defn update-loop [tick-interval update-fn]
   (fn [next-tick]

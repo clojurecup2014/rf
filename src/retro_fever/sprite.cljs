@@ -14,13 +14,13 @@
      :x x
      :y y}))
 
-(defn init-canvas [id width height]
-  (let [canvas (.getElementById js/document (name id))]
-    (set! (.-width canvas) width)
-    (set! (.-height canvas) height)
-    {:canvas-2d (.getContext canvas "2d")
-     :canvas-width width
-     :canvas-height height}))
+(defn ^:export sprite
+  [image width height x y]
+  {:image image
+   :width width
+   :height height
+   :x x
+   :y y})
 
 (defn ^:export render [canvas sprite]
   (let  [{:keys [image width height x y]} sprite
