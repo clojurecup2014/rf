@@ -1,8 +1,5 @@
 (ns retro-fever.sprite)
 
-(def sprite-state (atom {}))
-
-
 (defn  ^:export load-image
   "Load image from source"
   [src]
@@ -20,4 +17,22 @@
 
 (defn ^:export render [context sprite]
   (let [{:keys [image width height x y]} sprite]
-    (.drawImage context image x y width height)))
+    (.drawImage context image (+ x (/ width 2))
+                (+ y (/ height 2)) width height)))
+
+(defn ^:export draw-image
+  "Draw given image at specified location"
+  [context image x y]
+  (.drawImage context image x y (aget image "width") (aget image "height")))
+
+(defn collides?
+  [s1 s2]
+  (and (< (* (Math/abs (- (:x s1) (:x s2))) 2) (+ (:width s1) (:width s2)))
+       (< (* (Math/abs (- (:y s1) (:y s2))) 2) (+ (:height s1) (:height s2)))))
+
+(defn distance-to
+  [s1 s2]
+  (let [diff-x (- (:x s1) (:x s2))
+        diff-y (- (:y s1) (:y s2))]
+    (Math/sqrt (+ (* diff-x diff-x)
+                  (* diff-y diff-y)))))
