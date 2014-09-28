@@ -1,8 +1,8 @@
 (ns retro-fever.core
-  (:require-macros [cljs.core.async.macros :refer [go]]
-                   [retro-fever.macros :refer [game]])
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [<! put! alts! chan timeout]]
             [retro-fever.util :as util]
+            [retro-fever.asset :as asset]
             [retro-fever.stats :as stats]))
 
 (def app (atom {:game {:canvas nil :loop nil}}))
@@ -43,3 +43,12 @@
 
 (defn stop-loop []
   (put! (get-in @app [:game :loop]) false))
+
+(defn setup [& fns]
+  (go (loop []
+        (if (asset/resources-loaded?)
+          (do (asset/load-dependent-assets)
+              (doseq [f fns]
+                (f)))
+          (do (<! (timeout 100))
+              (recur))))))
