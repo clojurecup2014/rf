@@ -7,19 +7,32 @@
 
 (def game-state (atom {:environment {:gravity 0.6}}))
 
+(defn cursor-in-image? [state  x y]
+  (let [clicked-x (get-in state [:x])
+        clicked-y (get-in state [:y])]
+  (if (and (>= clicked-x x)
+           (<= clicked-x (+ x 50))
+           (>= clicked-y y)
+           (<= clicked-y (+ y 50)))
+    true
+    false)))
+
 (defn check-for-movement [character]
   (merge character
          (let [running? (input/key-pressed? :shift)]
            (cond
-            (input/key-pressed? :left) {:velocity-x (if running? -5 -3) :orientation :left}
-            (input/key-pressed? :right) {:velocity-x (if running? 5 3) :orientation :right}
-            :else {:velocity-x 0}))))
+            (or (and (contains? @input/cursor-state :x) (cursor-in-image? @input/cursor-state 30 270))
+                (input/key-pressed? :left)) {:velocity-x (if running? -5 -3) :orientation :left}
+            (or (and (contains? @input/cursor-state :x) (cursor-in-image? @input/cursor-state 560 270))
+                (input/key-pressed? :right)) {:velocity-x (if running? 5 3) :orientation :right}
+                :else {:velocity-x 0}))))
 
 (defn check-for-jumping [{:keys [velocity-x] :as character}]
   (let [jumping? (= (:state character) :jumping)
         running? (>= (Math/abs velocity-x) 4)]
     (merge character
-           (when (and (or (input/key-pressed? :space) (input/key-pressed? :up)) (not jumping?))
+           (when (and (or (and (contains? @input/cursor-state :x) (cursor-in-image? @input/cursor-state 300 100))
+                          (input/key-pressed? :space) (input/key-pressed? :up)) (not jumping?))
              {:state :jumping :velocity-y (if running? -14 -10)})
            (when jumping? {:state :jumping}))))
 
@@ -80,6 +93,9 @@
 
 (defn render-fn [context]
   (sprite/render-image context (asset/get-image :background) 0 0)
+  (sprite/render-image context (asset/get-image :left) 30 220)
+  (sprite/render-image context (asset/get-image :right) 560 220)
+  (sprite/render-image context (asset/get-image :top) 300 30)
   (doall (map #(sprite/render % context) (get-in @game-state [:platforms])))
   (sprite/render (get-in @game-state [:character]) context))
 
@@ -102,12 +118,16 @@
   (.log js/console "Launching a basic game")
   (core/init-canvas "game-canvas" 640 480)
   (input/init)
-
+  (input/init-cursor-in-container "game-canvas")
   ; Load resources
   (asset/load-assets {:images [{:id [:background] :src "images/background.png"}
                                {:id [:platform :left] :src "images/grassl.png"}
                                {:id [:platform :middle] :src "images/ground0.png"}
-                               {:id [:platform :right] :src "images/grassr.png"}]
+                               {:id [:platform :right] :src "images/grassr.png"}
+                               {:id [:dummy] :src "images/dummy_walk.png"}
+                               {:id [:left] :src "images/left.png"}
+                               {:id [:right] :src "images/right.png"}
+                               {:id [:top] :src "images/top.png"}]
                       :spritesheets [{:id :dummy-sheet :src "images/dummy.png" :cols 8 :rows 7}]
                       :animations [{:id [:character :idle :right] :src :dummy-sheet
                                     :cycle [0 1 2 3 4 5 6 7]

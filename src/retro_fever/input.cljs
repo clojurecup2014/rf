@@ -2,6 +2,7 @@
   (:require [clojure.string :as string]))
 
 (def kbd-state (atom #{}))
+(def cursor-state (atom {}))
 
 (def special-key-codes
   {8  "Backspace"
@@ -65,3 +66,35 @@
   []
   (aset js/window "onkeydown" (kbd-state-change kbd-state conj))
   (aset js/window "onkeyup" (kbd-state-change kbd-state disj)))
+
+(defn cursor-state-change
+  [state coord-ev]
+      (swap! state assoc :x (.-clientX coord-ev) :y (.-clientY coord-ev)))
+
+(defn touch-state-change
+  [state]
+  (fn [e]
+    (let [touches (.-changedTouches e)
+          touch (.item touches 0)]
+      (.preventDefault e)
+      (cursor-state-change state touch))))
+
+(defn mouse-state-change
+  [state]
+  (fn [e]
+      (cursor-state-change state e)))
+
+(defn cursor-state-reset
+  [state]
+  (fn [e]
+    (.preventDefault e)
+    (swap! state dissoc :x :y)))
+
+(defn ^:export init-cursor-in-container
+  [id]
+  (let [container (.getElementById js/document id)]
+    (.addEventListener container "mousedown" (mouse-state-change cursor-state))
+    (.addEventListener container "mouseup" (cursor-state-reset cursor-state))
+    (.addEventListener container "touchstart" (touch-state-change cursor-state))
+    (.addEventListener container "touchmove" (touch-state-change cursor-state))
+    (.addEventListener container "touchend" (cursor-state-reset cursor-state))))
