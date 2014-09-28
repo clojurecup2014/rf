@@ -56,6 +56,7 @@
                 space-as-space
                 string/lower-case
                 keyword)]
+      (.preventDefault e)
       (apply swap! [state f k]))))
 
 (defn key-pressed?
@@ -82,7 +83,8 @@
 (defn mouse-state-change
   [state]
   (fn [e]
-      (cursor-state-change state e)))
+    (.preventDefault e)
+    (cursor-state-change state e)))
 
 (defn cursor-state-reset
   [state]
