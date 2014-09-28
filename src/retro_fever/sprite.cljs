@@ -50,10 +50,11 @@
   ([context image x y width height]
      (render-image context image x y width height 0 0 width height 0 0))
   ([context image x y width height sx sy swidth sheight rel-x rel-y]
-     (.save context)
-     (.translate context x y)
-     (.drawImage context image sx sy swidth sheight rel-x rel-y width height)
-     (.restore context)))
+     (doto context
+       (.save)
+       (.translate x y)
+       (.drawImage image sx sy swidth sheight rel-x rel-y width height)
+       (.restore))))
 
 (defn render-frame
   "Render the given frame from the specified spritesheet"
