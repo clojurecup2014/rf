@@ -11,9 +11,9 @@
   (let [clicked-x (get-in state [:x])
         clicked-y (get-in state [:y])]
   (if (and (>= clicked-x x)
-           (<= clicked-x (+ x 50))
+           (<= clicked-x (+ x 80))
            (>= clicked-y y)
-           (<= clicked-y (+ y 50)))
+           (<= clicked-y (+ y 80)))
     true
     false)))
 
