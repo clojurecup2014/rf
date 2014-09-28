@@ -60,7 +60,6 @@ state using the function f"
                 space-as-space
                 string/lower-case
                 keyword)]
-      (.preventDefault e)
       (apply swap! [state f k]))))
 
 (defn key-pressed?
