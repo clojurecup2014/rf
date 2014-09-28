@@ -9,3 +9,4 @@ pom.xml.asc
 /demo/*/target
 /.nrepl-port
 /resources/retro-fever.js
+/demo/*/resources/*.js
