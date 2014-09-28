@@ -9,27 +9,54 @@
 
 (defn check-for-movement [character]
   (merge character
-         (cond
-          (input/key-pressed? :left) {:velocity-x -3 :state :walking :orientation :left}
-          (input/key-pressed? :right) {:velocity-x 3 :state :walking :orientation :right}
-          :else {:velocity-x 0 :state :idle})))
+         (let [running? (input/key-pressed? :shift)]
+           (cond
+            (input/key-pressed? :left) {:velocity-x (if running? -5 -3) :orientation :left}
+            (input/key-pressed? :right) {:velocity-x (if running? 5 3) :orientation :right}
+            :else {:velocity-x 0}))))
 
-(defn check-for-jumping [character]
-  (let [jumping? (< (:y character) 420)]
+(defn check-for-jumping [{:keys [velocity-x] :as character}]
+  (let [jumping? (= (:state character) :jumping)
+        running? (>= (Math/abs velocity-x) 4)]
     (merge character
            (when (and (or (input/key-pressed? :space) (input/key-pressed? :up)) (not jumping?))
-             {:state :jumping :velocity-y -10})
+             {:state :jumping :velocity-y (if running? -14 -10)})
            (when jumping? {:state :jumping}))))
-
-(defn check-for-landing [{:keys [state y] :as character}]
-  (merge character
-         (when (and (= state :jumping) (>= y 420))
-           {:state :idle :velocity-y 0 :y 420})))
 
 (defn consider-forces [{:keys [state velocity-y] :as character}]
   (merge character
          (when (= state :jumping)
            {:velocity-y (+ velocity-y (get-in @game-state [:environment :gravity]))})))
+
+(defn check-bounds [{:keys [x] :as character}]
+  (assoc character :x (cond
+                       (< x 25) 25
+                       (> x 615) 615
+                       :else x)))
+
+(defn check-for-base [{:keys [state y] :as character}]
+  (merge character
+         (when (and (= state :jumping) (>= y 420))
+           {:state :idle :velocity-y 0 :y 420})))
+
+(defn check-for-collisions [{:keys [x y velocity-y] :as character}]
+  (let [collisions (filter #(and (< (- (:x %) 30) x (+ (:x %) 30))
+                                 (> (- (:y %) 20) (+ y 60) (- (:y %) 36)))
+                           (get-in @game-state [:platforms]))]
+    (if (= (count collisions) 0)
+      (if (< y 420)
+        (assoc character :state :jumping)
+        character)
+      (if (> velocity-y 0)
+        (merge character {:state :idle :velocity-y 0 :y (- (:y (first collisions)) 84)})
+        character))))
+
+(defn determine-state [{:keys [state velocity-x] :as character}]
+  (assoc character :state (cond
+                           (= state :jumping) :jumping
+                           (= velocity-x 0) :idle
+                           (< 0 (Math/abs velocity-x) 4) :walking
+                           (<= 4 (Math/abs velocity-x)) :running)))
 
 (defn set-animation [{:keys [state orientation] :as character} old-character]
   (if (and (= (:state old-character) state) (= (:orientation old-character) orientation))
@@ -38,11 +65,14 @@
 
 (defn update-character [character]
   (-> character
-      check-for-landing
       check-for-movement
       check-for-jumping
       sprite/move
+      check-bounds
+      check-for-collisions
+      check-for-base
       consider-forces
+      determine-state
       (set-animation character)))
 
 (defn update-fn []
@@ -50,12 +80,21 @@
 
 (defn render-fn [context]
   (sprite/render-image context (asset/get-image :background) 0 0)
+  (doall (map #(sprite/render % context) (get-in @game-state [:platforms])))
   (sprite/render (get-in @game-state [:character]) context))
 
 (defn setup []
   (swap! game-state assoc
          :character (assoc (sprite/sprite (asset/get-animation [:character :idle :right]) 50 80 320 420)
                       :state :idle :orientation :right :update-fn update-character))
+
+  (doall (map (fn [[img x y]]
+                (swap! game-state update-in [:platforms] conj (sprite/sprite (asset/get-image [:platform img])
+                                                                             48 48 x y)))
+              [[:left 100 420] [:middle 148 420] [:right 196 420]
+               [:left 220 340] [:middle 268 340] [:right 316 340]
+               [:left 480 370] [:middle 528 370] [:right 572 370]
+               [:left 440 170] [:middle 488 170] [:right 532 170]]))
 
   (game core/game-loop update-fn render-fn 60))
 
@@ -66,7 +105,9 @@
 
   ; Load resources
   (asset/load-assets {:images [{:id [:background] :src "images/background.png"}
-                               {:id [:dummy] :src "images/dummy_walk.png"}]
+                               {:id [:platform :left] :src "images/grassl.png"}
+                               {:id [:platform :middle] :src "images/ground0.png"}
+                               {:id [:platform :right] :src "images/grassr.png"}]
                       :spritesheets [{:id :dummy-sheet :src "images/dummy.png" :cols 8 :rows 7}]
                       :animations [{:id [:character :idle :right] :src :dummy-sheet
                                     :cycle [0 1 2 3 4 5 6 7]
