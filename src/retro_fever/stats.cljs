@@ -58,3 +58,14 @@
 (defn get-stats []
   "Returns map with statistics from last interval"
   (select-keys @recordings [:ups :fps :avg-render-time :avg-update-time]))
+
+(defn render-stats [context color x y]
+  (let [{:keys [ups fps avg-render-time avg-update-time]} (get-stats)]
+    (doto context
+      (aset "font" "14px Arial")
+      (aset "textAlign" "left")
+      (aset "fillStyle" color)
+      (.fillText (str "UPS: " ups) x y)
+      (.fillText (str "FPS: " fps) x (+ y 16))
+      (.fillText (str "Avg. update time: " avg-update-time) x (+ y 32))
+      (.fillText (str "Avg. render time: " avg-render-time) x (+ y 48)))))
