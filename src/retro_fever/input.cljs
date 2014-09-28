@@ -22,6 +22,7 @@
    })
 
 (defn number-or-character?
+  "Takes a keyboard event key code and returns true if it is a char or number"
   [key-code]
   (or (< 47 key-code 57)
       (< 64 key-code 90)
@@ -50,6 +51,8 @@
   (if (= k " ") "Space" k))
 
 (defn kbd-state-change
+  "Returns a function which takes e keyboard event and swaps the atom
+state using the function f"
   [state f]
   (fn [e]
     (let [k (-> e
