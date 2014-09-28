@@ -66,6 +66,7 @@
                    (* (/ cell-height 2) -1))))
 
 (defn ^:export move [{:keys [x y velocity-x velocity-y] :as sprite}]
+  "Moves a sprite based on its velocity on the x and y-axis"
   (assoc sprite
     :x (if velocity-x (+ x velocity-x) x)
     :y (if velocity-x (+ y velocity-y) y)))
