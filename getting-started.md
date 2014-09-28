@@ -90,8 +90,10 @@ If you don't have `wget` just download the above link manual, name the file `dum
 
 Add the following inside the `init` function in `core.cljs`:
 
-  (asset/load-assets {:images [{:id [:dummy] :src "images/dummy_walk.png"}]})
+    (asset/load-assets {:images [{:id [:dummy] :src "images/dummy_walk.png"}]})
 
-Save the file and cljsbuild will pickup the save and rebuild `rf-tut.js`. Refresh the browser and look under the `Network` tab to see that the asset `dummy_walk.png` has been loaded.
+Save the file and cljsbuild will pickup the save and rebuild `rf-tut.js`. Refresh the browser and look under the `Network` tab in the Developer Tools to see that the asset `dummy_walk.png` has been loaded.
 
+To actually put the sprite on the canvas use the following:
 
+    (sprite/render-image (.getContext (.getElementById js/document "game-canvas") "2d") (asset/get-image :dummy) 0 0)
