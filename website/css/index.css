@@ -69,5 +69,5 @@ body, body[preview="public"] { overflow-x: auto; overflow-y: scroll; }
 .menu_text[container="drop"] { width: 100%; display: block; }
 .menu_text[container="drop"] .menu_text-label a { padding: 0px 0.5em; }
 .menu_text[state="selected"] .menu_text-label a, .menu_text[state="selected"] .menu_text-label a:visited { color: #5E64AD; transition: color 0.4s ease 0s; }
-
+#vote {margin-top: 25px;}
 
