@@ -68,15 +68,18 @@ state using the function f"
   (contains? @kbd-state key-code))
 
 (defn ^:export init
+  "Initializes keyboard as input device"
   []
   (aset js/window "onkeydown" (kbd-state-change kbd-state conj))
   (aset js/window "onkeyup" (kbd-state-change kbd-state disj)))
 
 (defn cursor-state-change
+  "Registers a cursor change"
   [state coord-ev]
-      (swap! state assoc :x (.-clientX coord-ev) :y (.-clientY coord-ev)))
+  (swap! state assoc :x (.-clientX coord-ev) :y (.-clientY coord-ev)))
 
 (defn touch-state-change
+  "Registers changes from touch devices"
   [state]
   (fn [e]
     (let [touches (.-changedTouches e)
@@ -85,18 +88,21 @@ state using the function f"
       (cursor-state-change state touch))))
 
 (defn mouse-state-change
+  "Registers changes from the mouse"
   [state]
   (fn [e]
     (.preventDefault e)
     (cursor-state-change state e)))
 
 (defn cursor-state-reset
+  "Resets the cursor state"
   [state]
   (fn [e]
     (.preventDefault e)
     (swap! state dissoc :x :y)))
 
 (defn ^:export init-cursor-in-container
+  "Initialize mouse and touch deviced for container with given id"
   [id]
   (let [container (.getElementById js/document id)]
     (.addEventListener container "mousedown" (mouse-state-change cursor-state))
