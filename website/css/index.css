@@ -1,0 +1,73 @@
+@font-face {
+	font-family: "Raleway";
+	font-style: normal;
+	font-weight: 700;
+	src: local("Raleway Bold"), local("Raleway-Bold"), url('../fonts/Raleway-Bold.woff') format("woff");
+}
+
+@font-face {
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 400;
+	src: url('../fonts/opensans-regular-webfont.eot') format("embedded-opentype"), url('../fonts/opensans-regular-webfont.woff') format("woff"), url('../fonts/opensans-regular-webfont.ttf') format("truetype"), url('../fonts/opensans-regular-webfont.svg') format("svg");
+}
+@font-face {
+	font-family: "Open Sans";
+	font-style: normal;
+	font-weight: 700;
+	src: url('../fonts/opensans-bold-webfont.eot') format("embedded-opentype"), url('../fonts/opensans-bold-webfont.woff') format("woff"), url('../fonts/opensans-bold-webfont.ttf') format("truetype"), url('../fonts/opensans-bold-webfont.svg') format("svg");
+}
+@font-face {
+	font-family: "Open Sans";
+	font-style: italic;
+	font-weight: 400;
+	src: url('../fonts/opensans-italic-webfont.eot') format("embedded-opentype"), url('../fonts/opensans-italic-webfont.woff') format("woff"), url('..//fonts/opensans-italic-webfont.ttf') format("truetype"), url('../fonts/opensans-italic-webfont.svg') format("svg");
+}
+@font-face {
+	font-family: "Open Sans";
+	font-style: italic;
+	font-weight: 700;
+	src: url('../fonts/opensans-bolditalic-webfont.eot') format("embedded-opentype"), url('../fonts/opensans-bolditalic-webfont.woff') format("woff"), url('../fonts/opensans-bolditalic-webfont.ttf') format("truetype"), url('../fonts/opensans-bolditalic-webfont.svg') format("svg");
+}
+
+a:visited 
+{
+    text-decoration: none; 
+    decoration: none; 
+}
+
+a, abbr, acronym, address, applet, b, big, blockquote, body, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, fieldset, font, form, h1, h2, h3, h4, h5, h6, html, i, iframe, img, ins, kbd, label, legend, li, object, ol, p, pre, q, s, samp, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, u, ul, var { margin: 0px; padding: 0px; border: 0px none; outline: 0px none; vertical-align: baseline; background: none repeat scroll 0px 0px transparent; }
+body { font-size: 10px; font-family: Arial,Helvetica,sans-serif; }
+:focus { outline: 0px none; }
+a { cursor: pointer; text-decoration: none; }
+body, html { height: 100%; }
+body, body[preview="public"] { overflow-x: auto; overflow-y: scroll; }
+.SITE_STRUCTURE { min-height: 100%; position: relative; margin: 0px auto; width: 1000px; }
+.blockSelection :not(input):not(textarea) { -moz-user-select: none; }
+.hidden { display: none ! important; }
+.font_0 { font: bold 30px/1.2em raleway,sans-serif; color: #5E64AD; }
+.font_1 { font: 13px/1.2em raleway,sans-serif; color: rgb(56, 56, 56); }
+.font_3 { font: 80px/1.2em raleway,sans-serif; color: rgb(56, 56, 56); }
+.font_4 { font: 40px/1.2em raleway,sans-serif; color: rgb(56, 56, 56); }
+.font_6 { font: 20px/1.2em "open sans",sans-serif; color: rgb(56, 56, 56); }
+.font_7 { font: 16px/1.2em raleway,sans-serif; color: rgb(56, 56, 56); }
+.font_8 { font: 13px/1.2em "open sans",sans-serif; color: rgb(56, 56, 56); }
+.font_9 { font: 12px/1.2em "open sans",sans-serif; color: rgb(56, 56, 56); }
+.color_12 { color: rgb(229, 229, 229); }
+.color_14 { color: rgb(140, 139, 139); }
+.color_18 { color: rgb(51, 149, 143); }
+.color_22 { color: rgb(229, 125, 34); }
+.menu-background { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; background-color: rgb(229, 229, 229); border-radius: 0px; }
+.footerBackground { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; background-color: #5E64AD; border-top: 3px solid rgb(254, 253, 253); border-bottom: 0px solid rgb(254, 253, 253); }
+.inlineContent { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; }
+.centeredContent { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; }
+.main_circle-bg { border: 0px solid rgb(56, 56, 56); position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; background-color: #E6FF84; border-radius: 50%; }
+.main_circle-inlineContent { position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px; border-radius: 50%; }
+.menu_text { display: inline-block; cursor: pointer; font: 13px/1.2em raleway,sans-serif; }
+.menu_text-c-gapper { padding: 0px 5px; }
+.menu_text-label a, .menu_text-label a:visited { display: inline-block; padding: 0px 10px; color: rgb(56, 56, 56); transition: color 0.4s ease 0s; }
+.menu_text[container="drop"] { width: 100%; display: block; }
+.menu_text[container="drop"] .menu_text-label a { padding: 0px 0.5em; }
+.menu_text[state="selected"] .menu_text-label a, .menu_text[state="selected"] .menu_text-label a:visited { color: #5E64AD; transition: color 0.4s ease 0s; }
+
+
