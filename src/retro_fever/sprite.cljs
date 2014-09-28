@@ -18,11 +18,13 @@
        (ImageSprite. image width height x y))))
 
 (defn collides?
+  "Checks wheter 2 sprites have collided using bounding boxes"
   [s1 s2]
   (and (< (* (Math/abs (- (:x s1) (:x s2))) 2) (+ (:width s1) (:width s2)))
        (< (* (Math/abs (- (:y s1) (:y s2))) 2) (+ (:height s1) (:height s2)))))
 
 (defn distance-to
+  "Calculates the distance between the centers of two sprites"
   [s1 s2]
   (let [diff-x (- (:x s1) (:x s2))
         diff-y (- (:y s1) (:y s2))]
