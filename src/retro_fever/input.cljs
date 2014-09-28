@@ -1,6 +1,7 @@
 (ns retro-fever.input
   (:require [clojure.string :as string]))
 
+; Map holding the current state of the kayboard keys
 (def kbd-state (atom #{}))
 (def cursor-state (atom {}))
 

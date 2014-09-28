@@ -3,8 +3,10 @@
             [retro-fever.sprite :as sprite]
             [retro-fever.util :as util]))
 
+; Map to hold all the loaded game assets
 (def asset-store (atom {}))
 
+; Vector of assets with dependencies to other assets
 (def dependent-assets (atom []))
 
 (defn- add-id-prefix [prefix id]
@@ -57,12 +59,14 @@
           :dependency-id (add-id-prefix :spritesheets (if (string? src) id src))
           :options [cycle (or interval 20) (or repeat true) 0 0 (or running false)]}))
 
-(defn create-by-type [type options]
+(defn- create-by-type [type options]
+  "Helper function to call the right constructor for dependent assets"
   (apply (condp = type
            :animation sprite/animation)
          options))
 
 (defn load-dependent-assets []
+  "Runs through all assets with dependencies and adds them to the asset store"
   (doseq [{:keys [id dependency-id type options]} @dependent-assets]
     (let [image (get-in @asset-store dependency-id)]
       (swap! asset-store assoc-in id
@@ -78,6 +82,7 @@
       (hash-map sub-key data))))
 
 (defn resources-loaded? []
+  "Checks wheter all asynchronous loaded resources have completed"
   (every? true? (vals (apply merge (flatten (collapse-assets @asset-store))))))
 
 (defn load-assets
